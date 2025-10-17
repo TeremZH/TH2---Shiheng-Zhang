@@ -78,3 +78,26 @@ Products
         OnHandValue = g.Sum(p => p.UnitPrice * p.UnitsInStock)
     })
     .Dump();
+
+//Q5
+Orders
+    .Where(o => o.OrderDetails.Sum(od => od.UnitPrice * od.Quantity) > 11000)
+    .OrderBy(o => o.Customer.Country)
+    .ThenBy(o => o.Customer.City)
+    .Select(o => new
+    {
+    	Customer = o.Customer.CompanyName,
+        City = o.Customer.City,
+        Country = o.Customer.Country,
+        Amount = o.OrderDetails.Sum(od => od.UnitPrice * od.Quantity),
+        Detail = o.OrderDetails
+            .OrderBy(od => od.Product.ProductName) 
+            .Select(od => new 
+            {
+                Product = od.Product.ProductName,
+                Qty = od.Quantity,
+                Cost = od.UnitPrice
+            })
+            .ToList()
+    })
+    .Dump();
