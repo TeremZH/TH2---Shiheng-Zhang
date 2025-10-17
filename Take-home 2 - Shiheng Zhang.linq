@@ -24,6 +24,18 @@ OrderDetails
         ProductName = od.Product.ProductName,
         Value = od.UnitPrice * od.Quantity * (1 - (decimal)od.Discount)
     })
+    .GroupBy(data => new 
+    { 
+        data.Year, 
+        data.EmployeeName 
+    })
+    .Where(group => group.Count() < 40)
+    .Select(group => new
+    {
+        Year = group.Key.Year,
+        Employee = group.Key.EmployeeName, 
+        Count = group.Count(), 
+    })
     .Dump();
 //Q2
 Customers
