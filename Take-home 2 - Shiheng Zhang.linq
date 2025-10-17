@@ -15,6 +15,16 @@
   </Connection>
 </Query>
 
+//Q1
+OrderDetails
+    .Select(od => new 
+    {
+        Year = od.Order.OrderDate.Value.Year,
+        EmployeeName = od.Order.Employee.LastName,
+        ProductName = od.Product.ProductName,
+        Value = od.UnitPrice * od.Quantity * (1 - (decimal)od.Discount)
+    })
+    .Dump();
 //Q2
 Customers
     .Where(c => c.Orders.Count >= 1 && c.Orders.Count < 5)
