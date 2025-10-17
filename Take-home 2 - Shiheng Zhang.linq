@@ -30,13 +30,25 @@ OrderDetails
         data.EmployeeName 
     })
     .Where(group => group.Count() < 40)
+    .OrderBy(group => group.Key.Year)
+    .ThenBy(group => group.Key.EmployeeName)
     .Select(group => new
     {
         Year = group.Key.Year,
         Employee = group.Key.EmployeeName, 
         Count = group.Count(), 
+        Order = group
+            .Where(item => item.Value > 1000)
+            .OrderByDescending(item => item.Value)
+            .Select(item => new 
+            {
+                Products = item.ProductName,
+                Total = item.Value
+            })
+            .ToList()
     })
     .Dump();
+	
 //Q2
 Customers
     .Where(c => c.Orders.Count >= 1 && c.Orders.Count < 5)
